@@ -25,25 +25,29 @@ A simple prescription resource for QBCore, created using React. It allows player
 	['prescription'] 				 = {['name'] = 'prescription', 					['label'] = 'Prescription', 			['weight'] = 500, 		['type'] = 'item', 		['image'] = 'prescription.png', 		['unique'] = true, 		['useable'] = true, 	['shouldClose'] = true,	   ['combinable'] = nil,   ['description'] = 'A prescription for legal drugs'},
 	['amoxicillin'] 				 = {['name'] = 'amoxicillin', 					['label'] = 'Amoxicillin', 				['weight'] = 500, 		['type'] = 'item', 		['image'] = 'amoxicillin.png', 			['unique'] = true, 		['useable'] = true, 	['shouldClose'] = true,	   ['combinable'] = nil,   ['description'] = 'A prescribed antibiotic'},
 ```
-- Use the `CreateUseableItem` function and pass in any medication items you've added
+- Items passed in Config.medList will be usable by default with code below, found in server.lua. This can be edited to add custom effects for specific medications
 
 ```lua
---Example Medication
- QBCore.Functions.CreateUseableItem("amoxicillin", function(source, item)
-    local Player = QBCore.Functions.GetPlayer(source)
-	if not Player.Functions.GetItemBySlot(item.slot) or not item.info.dosage then return end
-    local playerInventory = QBCore.Functions.GetPlayer(source).PlayerData.items
+for i=1, #Config.medList do
+    QBCore.Functions.CreateUseableItem(Config.medList[i].item, function(source, item)
+        local Player = QBCore.Functions.GetPlayer(source)
+        if not Player.Functions.GetItemBySlot(item.slot) or not item.info.dosage then return end
+        local playerInventory = QBCore.Functions.GetPlayer(source).PlayerData.items
 
-    if item.info.dosage <= 1 then
-        Player.Functions.RemoveItem("amoxicillin", 1, item.slot)
-        TriggerClientEvent("QBCore:Notify", source, "You take the last dose of your medication", "success")
-    else
-        local newDosage = item.info.dosage - 1
-        playerInventory[item.slot].info.dosage = newDosage 
-        Player.Functions.SetInventory(playerInventory)
-        TriggerClientEvent("QBCore:Notify", source, "You take your medication and have " .. newDosage .. " dose(s) left", "success")
-    end
+        if item.info.dosage <= 1 then
+            Player.Functions.RemoveItem(Config.medList[i].item, 1, item.slot)
+            TriggerClientEvent("QBCore:Notify", source, "You take the last dose of your medication", "success")
+        else
+            local newDosage = item.info.dosage - 1
+            playerInventory[item.slot].info.dosage = newDosage 
+            Player.Functions.SetInventory(playerInventory)
+            TriggerClientEvent("QBCore:Notify", source, "You take your medication and have " .. newDosage .. " dose(s) left", "success")
+        end
 
-    -- Add custom med effects here :)
-end)
+        -- Edit here to add custom med effect
+        -- if Config.medList[i].item == "specialMed" then
+        --     TriggerClientEvent("customEventName", source)
+        -- end
+    end)
+end
 ```
