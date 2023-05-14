@@ -1,26 +1,166 @@
-.nui-wrapper {
-  text-align: center;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Roboto:wght@400;500;700;900&family=Pacifico&display=swap');
+:root {
+  --background-1: #f1ede9;
 }
 
-pre {
-  counter-reset:line-numbering;
-  background:#2c3e50;
-  padding:12px 0px 14px 0;
-  color:#ecf0f1;
-  line-height:140%;
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5vh;
 }
 
-.popup-thing {
-  background: #282c34;
-  border-radius: 10px;
-  width: 500px;
-  height: 400px;
+#container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#prescript-container {
+  background-color: var(--background-1);
+  height: 49vh;
+  width: 46vh;
+}
+
+.notepad-top {
+  background-color: #333;
+  border-top-left-radius: 1vh;
+  border-top-right-radius: 1vh;
+  height: 5vh;
+}
+
+#header {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
+
+  position: relative;
+  border-bottom: 1px solid black;
+  padding: 1vh 2vh 1.5vh;
+}
+
+.prescription-icon {
+  font-size: 2vh;
+}
+
+.header-text {
+  margin-left: 1vh;
+  font-size: 2vh;
+  font-weight: 500;
+}
+
+.docInfo {
+  font-size: 1.3vh;
+  font-weight: 500;
+  text-align: right;
+}
+
+#prescript-form {
+  margin: 2vh 2.5vh;
+}
+
+.form-input {
+  display: flex;
+}
+
+label {
+  font-weight: 500;
+  margin-right: 1vh;
+}
+
+input, select, textarea {
+  font-family: 'Roboto', sans-serif;
+}
+
+.form-input> input {
+  background-color: var(--background-1);
+  border: none;
+  border-bottom: 1px solid black;
+  font-size: 1.5vh;
+  margin-bottom: 2vh;
+  flex-grow: 1;
+}
+
+*:focus {
+  outline: none;
+}
+
+#medication {
+  background-color: var(--background-1);
+  border: none;
+  border-bottom: 1px solid black;
+  font-size: 1.5vh;
+  margin-bottom: 2vh;
+  width: 100%;
+}
+
+#medication > option {
+  background-color: var(--background-1);
+
+  font-size: 1.5vh;
+  flex-grow: 1;
+}
+
+select:disabled, textarea:read-only, input:read-only {
+  color: black;
+  opacity: 1;
+  font-family: 'Roboto', sans-serif;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#notes {
+  border: none;
+  font-size: 1.6vh;
+  margin-top: 0.5vh;
+  margin-bottom: 1vh;
+  height: 20vh;
+  width: 100%;
+  resize: none;
+  background-color: #F1EDE9;
+}
+
+#bottom-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date {
+  margin-top: 0.5vh;
+  font-weight: 500;
+}
+
+.signature-input > label {
+  padding: 0.5vh 1vh 0;
+  margin: 0;
+}
+
+#sign {
+  font-family: 'Pacifico', cursive;
+  font-weight: 500;
+  font-size: 1.5vh;
+  width: 18vh;
+}
+
+#submit-button {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #333;
+  border: none;
+  border-radius: 0.3vh;
   color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5vh;
+  padding: 0.5vh 2vh;
+  margin: 2vh 0;
+}
+
+#submit-button:hover {
+  cursor: pointer;
+  background-color: #555;
 }
