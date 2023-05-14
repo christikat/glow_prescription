@@ -49,21 +49,23 @@ QBCore.Functions.CreateUseableItem("prescription", function(source, item)
     TriggerClientEvent("glow_prescription_cl:usePrescription", source, item.info)
 end)
 
--- QBCore.Functions.CreateUseableItem("amoxicillin", function(source, item)
---     local Player = QBCore.Functions.GetPlayer(source)
--- 	if not Player.Functions.GetItemBySlot(item.slot) or not item.info.dosage then return end
---     local playerInventory = QBCore.Functions.GetPlayer(source).PlayerData.items
+for i=1, #Config.medList do
+    QBCore.Functions.CreateUseableItem(Config.medList[i].item, function(source, item)
+        local Player = QBCore.Functions.GetPlayer(source)
+        if not Player.Functions.GetItemBySlot(item.slot) or not item.info.dosage then return end
+        local playerInventory = QBCore.Functions.GetPlayer(source).PlayerData.items
 
---     if item.info.dosage <= 1 then
---         Player.Functions.RemoveItem("amoxicillin", 1, item.slot)
---         TriggerClientEvent("QBCore:Notify", source, "You take the last dose of your medication", "success")
---     else
---         local newDosage = item.info.dosage - 1
---         playerInventory[item.slot].info.dosage = newDosage 
---         Player.Functions.SetInventory(playerInventory)
---         TriggerClientEvent("QBCore:Notify", source, "You take your medication and have " .. newDosage .. " dose(s) left", "success")
---     end
--- end)
+        if item.info.dosage <= 1 then
+            Player.Functions.RemoveItem(Config.medList[i].item, 1, item.slot)
+            TriggerClientEvent("QBCore:Notify", source, "You take the last dose of your medication", "success")
+        else
+            local newDosage = item.info.dosage - 1
+            playerInventory[item.slot].info.dosage = newDosage 
+            Player.Functions.SetInventory(playerInventory)
+            TriggerClientEvent("QBCore:Notify", source, "You take your medication and have " .. newDosage .. " dose(s) left", "success")
+        end
+    end)
+end
 
 QBCore.Functions.CreateCallback("glow_prescription_sv:createPrescription", function(source, cb, data)
     local Player = QBCore.Functions.GetPlayer(source)
@@ -121,10 +123,15 @@ RegisterNetEvent("glow_prescription_sv:getMeds", function()
     end
 
     local invalidPrescript = false
+    local expiredPrescript = false
 
     for i=1, #prescriptions do
         local metadata = prescriptions[i].info.formInfo
-        if metadata.patient ~= playerName then
+
+        if hasExpired(prescriptions[i].info.unixTime) then
+            Player.Functions.RemoveItem("prescription", 1, prescriptions[i].slot)
+            expiredPrescript = true
+        elseif metadata.patient ~= playerName then
             invalidPrescript = true
         else
             if Player.Functions.RemoveItem("prescription", 1, prescriptions[i].slot) then
@@ -136,6 +143,10 @@ RegisterNetEvent("glow_prescription_sv:getMeds", function()
     end
 
     if invalidPrescript then
-        TriggerClientEvent("QBCore:Notify", src, "This prescription doesn't have your name on it", "error")
+        TriggerClientEvent("QBCore:Notify", src, "One or more of these prescriptions don't have your name on it", "error")
+    end
+
+    if expiredPrescript then
+        TriggerClientEvent("QBCore:Notify", src, "Removed one or more expired prescriptions", "error")
     end
 end)
